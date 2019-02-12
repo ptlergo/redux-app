@@ -12,8 +12,8 @@ export class App extends React.Component {
     return (
       <Provider store={store}>
         <div className="App">
-          <PostForm fetchPosts={this.fetchReq} />
-          <Posts fetchReq={this.fetchReq} />
+          <PostForm />
+          <Posts />
         </div>
       </Provider>
     );
