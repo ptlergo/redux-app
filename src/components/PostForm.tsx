@@ -1,6 +1,8 @@
 import React, { Component, ChangeEvent } from "react";
+import { connect } from "react-redux";
+import { createPost } from "../actions/postActions";
 
-export default class PostForm extends Component<IFormState, any> {
+class PostForm extends Component<IFormProps, any> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -8,20 +10,6 @@ export default class PostForm extends Component<IFormState, any> {
       body: ""
     };
   }
-
-  public PostData = (post: {}): void => {
-    fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(post)
-    })
-      .then(res => res.json())
-      .then(data => {
-        return console.log({ data });
-      });
-  };
 
   public handleChange = (e: ChangeEvent<any>): void =>
     this.setState({ [e.target.name]: e.target.value });
@@ -32,7 +20,7 @@ export default class PostForm extends Component<IFormState, any> {
       title: this.state.title,
       body: this.state.body
     };
-    this.PostData(post);
+    this.props.createPost(post);
   };
 
   render(): JSX.Element {
@@ -68,7 +56,13 @@ export default class PostForm extends Component<IFormState, any> {
   }
 }
 
-interface IFormState {
+interface IFormProps {
   title: any;
   body: any;
+  createPost({}): any;
 }
+
+export default connect(
+  null,
+  { createPost }
+)(PostForm);
