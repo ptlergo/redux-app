@@ -2,9 +2,15 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { fetchPosts } from "../actions/postActions";
 
-class Posts extends React.Component<any, IPostState> {
+class Posts extends React.Component<IPostProps, any> {
   componentDidMount() {
     this.props.fetchPosts();
+  }
+
+  componentWillReceiveProps(nextProps: any) {
+    if (nextProps.newPost) {
+      this.props.posts.unshift(nextProps.newPost);
+    }
   }
   render(): JSX.Element {
     const postItems = this.props.posts.map((post: any) => (
@@ -22,13 +28,17 @@ class Posts extends React.Component<any, IPostState> {
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  posts: state.posts.items
-})
+const mapStateToProps = (state: any): {} => ({
+  posts: state.posts.items,
+  newPost: state.posts.item
+});
 export default connect(
   mapStateToProps,
   { fetchPosts }
 )(Posts);
-interface IPostState {
+
+interface IPostProps {
   posts: Array<any>;
+  newPost: {};
+  fetchPosts(): any;
 }
