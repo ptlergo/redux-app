@@ -1,26 +1,13 @@
-import React, { Component } from "react";
+import * as React from "react";
+import { connect } from "react-redux";
+import { fetchPosts } from "../actions/postActions";
 
-export default class Posts extends Component<{}, IPostState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      posts: []
-    };
-  }
-
-  fetchPosts = (): void => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then(res => res.json())
-      .then(data => {
-        return this.setState({ posts: data });
-      });
-  };
-
+class Posts extends React.Component<any, IPostState> {
   componentDidMount() {
-    this.fetchPosts();
+    this.props.fetchPosts();
   }
   render(): JSX.Element {
-    const postItems = this.state.posts.map(post => (
+    const postItems = this.props.posts.map((post: any) => (
       <div key={post.id}>
         <h3>{post.title}</h3>
         <p>{post.body}</p>
@@ -35,6 +22,13 @@ export default class Posts extends Component<{}, IPostState> {
   }
 }
 
+const mapStateToProps = (state: any) => ({
+  posts: state.posts.items
+})
+export default connect(
+  mapStateToProps,
+  { fetchPosts }
+)(Posts);
 interface IPostState {
   posts: Array<any>;
 }
